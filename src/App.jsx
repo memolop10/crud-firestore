@@ -17,8 +17,9 @@ function App() {
           id:doc.id,
           ...doc.data()
         }))
-
         setTareas(arrayData);
+        console.log(arrayData)
+
 
       } catch (error) {
         console.log(error)
@@ -26,7 +27,7 @@ function App() {
     }
 
     getData();
-  })
+  },[])
 
   const agregar = async(e) => {
     e.preventDefault();
@@ -35,6 +36,24 @@ function App() {
       console.log('esta vacio')
       return
     }
+
+    try {
+      const db = firebase.firestore()
+      const nuevaTarea = {
+        name: tarea,
+        fecha: Date.now()
+      }
+
+      const data = await db.collection('tareas').add(nuevaTarea);
+      setTareas([
+        ...tareas,
+        {...nuevaTarea,id:data.id}
+      ])
+      setTarea('')
+    } catch (error) {
+      
+    }
+
     console.log(tarea)
   }
 
