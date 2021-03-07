@@ -7,6 +7,7 @@ function App() {
   const [tarea, setTarea] = React.useState('')
   const [modoEdicion, setModoEdicion] = React.useState(false)
   const [id, setId] = React.useState ('')
+  const [error, setError] =React.useState('')
 
   React.useEffect(() => {
 
@@ -36,6 +37,7 @@ function App() {
 
     if(!tarea.trim()){
       console.log('esta vacio')
+      setError('Escriba algo por favor')
       return
     }
 
@@ -57,6 +59,7 @@ function App() {
     }
 
     console.log(tarea)
+    setError('')
   }
 
   const eliminar = async(id) => {
@@ -81,6 +84,8 @@ function App() {
       e.preventDefault();
       if (!tarea.trim()) {
         console.log('vacio')
+        setError('Escriba algo por favor')
+        return
       }
       try {
         const db = firebase.firestore()
@@ -95,6 +100,7 @@ function App() {
          setModoEdicion(false)
          setTarea('')
          setId('')
+         setError('')
 
       } catch (error) {
         console.log(error);
@@ -133,6 +139,9 @@ function App() {
             }
           </h3>
           <form onSubmit={modoEdicion ? editar : agregar}>
+             {             
+               error ? <span className="text-danger">{error}</span> : ''
+             } 
             <input 
               type="text"
               className="form-control mb-2"
